@@ -50,7 +50,7 @@ test('uses rounded-square artwork by default and supports circular custom images
 });
 
 test('resolves bundled artwork without a network image request', () => {
-  for (const name of ['san-francisco', 'stuttgart', 'tahoe']) {
+  for (const name of ['san-francisco', 'stuttgart', 'tahoe', 'hawaii']) {
     assert.match(resolveImage(`builtin:${name}`), /^data:image\/webp;base64,/);
   }
   assert.equal(resolveImage('builtin:unknown'), null);
@@ -74,7 +74,7 @@ test('ships matching manual and HACS scripts plus source artwork', () => {
   const root = path.join(__dirname, '..');
   assert.equal(fs.readFileSync(path.join(root, 'dist/ha-worldclock-card.js'), 'utf8'),
     fs.readFileSync(path.join(root, 'ha-worldclock-card.js'), 'utf8'));
-  for (const name of ['san-francisco', 'stuttgart', 'tahoe']) {
+  for (const name of ['san-francisco', 'stuttgart', 'tahoe', 'hawaii']) {
     assert.ok(fs.statSync(path.join(root, 'artwork', `${name}.webp`)).size > 1000);
   }
 });

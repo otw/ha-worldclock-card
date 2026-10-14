@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.0 — Hawaii artwork and illustrated showcase
+
+- Add an original Diamond Head and Waikiki illustration as `builtin:hawaii`, bundled in the card script for HACS and manual installs.
+- Showcase San Francisco, Lake Tahoe, and Hawaii in the demo, README gallery, and screenshot.
+- Keep Stuttgart artwork and its `builtin:stuttgart` option available.
+
 ## v0.2.2 — Self-contained artwork
 
 - Bundle all three illustrations inside the card JavaScript so they display with HACS and manual installs without separate image requests.

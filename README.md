@@ -11,7 +11,7 @@ The screenshot is rendered from the included [demo](demo/index.html) with exampl
 - A large primary clock with the local date; the first `zones` entry is the primary clock.
 - Smaller clocks with each place's own date, so “tomorrow” across the date line is visible.
 - Optional day/night icons, time zone abbreviations, local images or Home Assistant entity pictures for every clock.
-- Original comic style images for San Francisco, Stuttgart, and Lake Tahoe, bundled for HACS or manual installation.
+- Original comic style images for San Francisco, Stuttgart, Lake Tahoe, and Hawaii, bundled for HACS or manual installation.
 - 12-hour, 24-hour, or locale-selected time; optional seconds.
 - Automatic updates at each minute boundary, or each second when seconds are shown. The timer stops when the card leaves the page.
 - Content-sized height in Home Assistant sections views, including when a title or many places are configured.
@@ -27,7 +27,7 @@ The card needs no sensors, API key, build step, CDN, or external service. Its ti
 3. In **Settings → Dashboards → Resources**, add `/hacsfiles/ha-worldclock-card/ha-worldclock-card.js` as a **JavaScript module** if HACS has not added it automatically.
 4. Add the [minimal card YAML](#minimal-example) to a dashboard and reload the browser.
 
-The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/docs/publish/plugin/): its `dist/` JavaScript file matches the repository name. The three starter illustrations are embedded in that file, so HACS needs no separate image files.
+The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/docs/publish/plugin/): its `dist/` JavaScript file matches the repository name. The four starter illustrations are embedded in that file, so HACS needs no separate image files.
 
 ### Manual
 
@@ -54,7 +54,14 @@ Use [IANA time zone names](https://www.iana.org/time-zones), not fixed UTC offse
 
 ## Illustrated places
 
-The included images are square, comic style illustrations with rounded corners in the card. The default rounded-square shape gives landmarks more room than a circle. Set `image_shape: circle` if you prefer round portraits. All three images are original artwork with no household data.
+The included images are square, comic style illustrations with rounded corners in the card. The default rounded-square shape gives landmarks more room than a circle. Set `image_shape: circle` if you prefer round portraits. All four images are original artwork with no household data.
+
+| San Francisco | Lake Tahoe | Hawaii |
+| :---: | :---: | :---: |
+| ![Illustration of San Francisco](artwork/san-francisco.webp) | ![Illustration of Lake Tahoe](artwork/tahoe.webp) | ![Illustration of Hawaii](artwork/hawaii.webp) |
+| `builtin:san-francisco` | `builtin:tahoe` | `builtin:hawaii` |
+
+[Stuttgart artwork](artwork/stuttgart.webp) is also included as `builtin:stuttgart`. All four illustrations are embedded in the JavaScript release; using a `builtin:` image does not load a separate image file or send a request to another site.
 
 The same YAML works with HACS and manual installation:
 
@@ -64,12 +71,12 @@ zones:
   - name: San Francisco
     timezone: America/Los_Angeles
     image: builtin:san-francisco
-  - name: Stuttgart
-    timezone: Europe/Berlin
-    image: builtin:stuttgart
   - name: Tahoe
     timezone: America/Los_Angeles
     image: builtin:tahoe
+  - name: Hawaii
+    timezone: Pacific/Honolulu
+    image: builtin:hawaii
 ```
 
 The separate [`artwork/`](artwork/) files are available for reuse, but the card does not need them installed separately.
@@ -101,7 +108,7 @@ Each `zones` entry accepts:
 | --- | --- | --- |
 | `name` | Yes | Label shown for that place. |
 | `timezone` | Yes | Valid IANA time zone, such as `Europe/Berlin`. |
-| `image` | No | `builtin:san-francisco`, `builtin:stuttgart`, `builtin:tahoe`, or your own image URL/path for any place, including the primary clock. `cities/berlin.jpg` resolves to `/local/cities/berlin.jpg`. |
+| `image` | No | `builtin:san-francisco`, `builtin:stuttgart`, `builtin:tahoe`, `builtin:hawaii`, or your own image URL/path for any place, including the primary clock. `cities/berlin.jpg` resolves to `/local/cities/berlin.jpg`. |
 | `entity_id` | No | Entity whose `entity_picture` takes precedence over `image` when available. |
 
 The day/night icons use the configured clock-hour range. They do not calculate astronomical sunrise or sunset.
