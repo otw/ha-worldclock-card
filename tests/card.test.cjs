@@ -68,6 +68,6 @@ test('ships the same card and all example images in the HACS dist package', () =
   assert.equal(fs.readFileSync(path.join(root, 'dist/ha-worldclock-card.js'), 'utf8'),
     fs.readFileSync(path.join(root, 'ha-worldclock-card.js'), 'utf8'));
   for (const name of ['san-francisco', 'stuttgart', 'tahoe']) {
-    assert.ok(fs.statSync(path.join(root, 'dist/images', `${name}.webp`)).size > 1000);
+    assert.ok(fs.statSync(path.join(root, 'dist', `${name}.webp`)).size > 1000);
   }
 });

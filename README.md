@@ -27,11 +27,11 @@ The card needs no sensors, API key, build step, CDN, or external service. Its ti
 3. In **Settings → Dashboards → Resources**, add `/hacsfiles/ha-worldclock-card/ha-worldclock-card.js` as a **JavaScript module** if HACS has not added it automatically.
 4. Add the [minimal card YAML](#minimal-example) to a dashboard and reload the browser.
 
-The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/docs/publish/plugin/): its root JavaScript file matches the repository name.
+The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/docs/publish/plugin/): its `dist/` JavaScript file matches the repository name, and the illustrations sit beside it.
 
 ### Manual
 
-1. Copy [`ha-worldclock-card.js`](ha-worldclock-card.js) to `/config/www/ha-worldclock-card.js`. To use the bundled artwork, also copy [`dist/images/`](dist/images/) to `/config/www/ha-worldclock-card/images/`.
+1. Copy [`ha-worldclock-card.js`](ha-worldclock-card.js) to `/config/www/ha-worldclock-card.js`. To use the bundled artwork, also copy the three `.webp` files in [`dist/`](dist/) to `/config/www/ha-worldclock-card/`.
 2. Add `/local/ha-worldclock-card.js` under **Settings → Dashboards → Resources**, with type **JavaScript module**.
 3. Add the [minimal card YAML](#minimal-example) and reload the browser.
 
@@ -63,16 +63,16 @@ type: custom:ha-worldclock-card
 zones:
   - name: San Francisco
     timezone: America/Los_Angeles
-    image: /hacsfiles/ha-worldclock-card/images/san-francisco.webp
+    image: /hacsfiles/ha-worldclock-card/san-francisco.webp
   - name: Stuttgart
     timezone: Europe/Berlin
-    image: /hacsfiles/ha-worldclock-card/images/stuttgart.webp
+    image: /hacsfiles/ha-worldclock-card/stuttgart.webp
   - name: Tahoe
     timezone: America/Los_Angeles
-    image: /hacsfiles/ha-worldclock-card/images/tahoe.webp
+    image: /hacsfiles/ha-worldclock-card/tahoe.webp
 ```
 
-For a **manual installation**, use `/local/ha-worldclock-card/images/san-francisco.webp` and the corresponding Stuttgart and Tahoe paths after copying the image folder as described above.
+For a **manual installation**, use `/local/ha-worldclock-card/san-francisco.webp` and the corresponding Stuttgart and Tahoe paths after copying the images as described above.
 
 You can replace any `image` with your own `/local/...` path, `/hacsfiles/...` path, or HTTPS URL. A 1:1 image at least 128 × 128 pixels works well. With no image, a small clock uses a globe; the primary clock keeps its text layout. An `entity_id` with an `entity_picture` can also provide a dynamic image.
 

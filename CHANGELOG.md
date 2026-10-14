@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1 — HACS image paths
+
+- Place the bundled images directly in `dist/` so HACS installs and serves them alongside the card.
+- Correct the illustrated YAML examples and manual copy instructions.
+
 ## v0.2.0 — Illustrated places
 
 - Add original, reusable comic style artwork for San Francisco, Stuttgart, and Lake Tahoe.
