@@ -1,0 +1,47 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { normalizeConfig, formatZone, resolveImage, nextTickDelay } = require('../ha-worldclock-card.js');
+
+test('rejects an invalid IANA time zone before rendering', () => {
+  assert.throws(
+    () => normalizeConfig({ zones: [{ name: 'Example', timezone: 'Mars/Olympus_Mons' }] }),
+    /Mars\/Olympus_Mons/,
+  );
+});
+
+test('formats the correct New York clock across the spring DST jump', () => {
+  const config = normalizeConfig({
+    zones: [{ name: 'New York', timezone: 'America/New_York' }],
+    hour_format: '12',
+  });
+  const before = formatZone(new Date('2026-03-08T06:30:00Z'), config.zones[0], config);
+  const after = formatZone(new Date('2026-03-08T07:30:00Z'), config.zones[0], config);
+  assert.equal(before.time, '1:30 AM');
+  assert.equal(after.time, '3:30 AM');
+  assert.equal(after.date, 'Sunday, March 8, 2026');
+  assert.equal(after.isDay, false);
+});
+
+test('uses the configured 24-hour format and each zone’s own date', () => {
+  const config = normalizeConfig({
+    zones: [{ name: 'Tokyo', timezone: 'Asia/Tokyo' }],
+    hour_format: '24',
+  });
+  const result = formatZone(new Date('2026-10-14T23:05:00Z'), config.zones[0], config);
+  assert.equal(result.time, '08:05');
+  assert.equal(result.date, 'Thursday, October 15, 2026');
+  assert.equal(result.isDay, true);
+});
+
+test('resolves local images without adding an external avatar request', () => {
+  assert.equal(resolveImage('cities/stuttgart.jpg'), '/local/cities/stuttgart.jpg');
+  assert.equal(resolveImage('/local/cities/sf.png'), '/local/cities/sf.png');
+  assert.equal(resolveImage(), null);
+  assert.equal(resolveImage('javascript:alert(1)'), null);
+});
+
+test('schedules the next update on the next minute or second boundary', () => {
+  const now = new Date('2026-10-14T12:34:45.250Z');
+  assert.equal(nextTickDelay(now, false), 14750);
+  assert.equal(nextTickDelay(now, true), 750);
+});
