@@ -62,18 +62,18 @@
     hour_format: '12',
     show_time_zone: true,
     zones: [
-      { name: 'San Francisco', timezone: 'America/Los_Angeles', image: '/dist/san-francisco.webp' },
-      { name: 'Stuttgart', timezone: 'Europe/Berlin', image: '/dist/stuttgart.webp' },
-      { name: 'Tahoe', timezone: 'America/Los_Angeles', image: '/dist/tahoe.webp' },
+      { name: 'San Francisco', timezone: 'America/Los_Angeles', image: 'builtin:san-francisco' },
+      { name: 'Stuttgart', timezone: 'Europe/Berlin', image: 'builtin:stuttgart' },
+      { name: 'Tahoe', timezone: 'America/Los_Angeles', image: 'builtin:tahoe' },
     ],
   });
   document.getElementById('light').setConfig({
     title: 'World clock',
     hour_format: '24',
     zones: [
-      { name: 'Tahoe', timezone: 'America/Los_Angeles', image: '/dist/tahoe.webp' },
-      { name: 'San Francisco', timezone: 'America/Los_Angeles', image: '/dist/san-francisco.webp' },
-      { name: 'Stuttgart', timezone: 'Europe/Berlin', image: '/dist/stuttgart.webp' },
+      { name: 'Tahoe', timezone: 'America/Los_Angeles', image: 'builtin:tahoe' },
+      { name: 'San Francisco', timezone: 'America/Los_Angeles', image: 'builtin:san-francisco' },
+      { name: 'Stuttgart', timezone: 'Europe/Berlin', image: 'builtin:stuttgart' },
     ],
   });
 </script>

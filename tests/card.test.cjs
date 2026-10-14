@@ -49,6 +49,13 @@ test('uses rounded-square artwork by default and supports circular custom images
   assert.throws(() => normalizeConfig({ ...base, image_shape: 'hexagon' }), /image_shape/);
 });
 
+test('resolves bundled artwork without a network image request', () => {
+  for (const name of ['san-francisco', 'stuttgart', 'tahoe']) {
+    assert.match(resolveImage(`builtin:${name}`), /^data:image\/webp;base64,/);
+  }
+  assert.equal(resolveImage('builtin:unknown'), null);
+});
+
 test('schedules the next update on the next minute or second boundary', () => {
   const now = new Date('2026-10-14T12:34:45.250Z');
   assert.equal(nextTickDelay(now, false), 14750);
@@ -63,11 +70,11 @@ test('lets Home Assistant sections size the card to its content', () => {
   assert.equal(HAWorldclockCard.prototype.getCardSize.call({ _config: { title: 'World clock', zones: [{}, {}] } }), 5);
 });
 
-test('ships the same card and all example images in the HACS dist package', () => {
+test('ships matching manual and HACS scripts plus source artwork', () => {
   const root = path.join(__dirname, '..');
   assert.equal(fs.readFileSync(path.join(root, 'dist/ha-worldclock-card.js'), 'utf8'),
     fs.readFileSync(path.join(root, 'ha-worldclock-card.js'), 'utf8'));
   for (const name of ['san-francisco', 'stuttgart', 'tahoe']) {
-    assert.ok(fs.statSync(path.join(root, 'dist', `${name}.webp`)).size > 1000);
+    assert.ok(fs.statSync(path.join(root, 'artwork', `${name}.webp`)).size > 1000);
   }
 });

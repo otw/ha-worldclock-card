@@ -1,9 +1,14 @@
 # Changelog
 
-## v0.2.1 — HACS image paths
+## v0.2.2 — Self-contained artwork
 
-- Place the bundled images directly in `dist/` so HACS installs and serves them alongside the card.
-- Correct the illustrated YAML examples and manual copy instructions.
+- Bundle all three illustrations inside the card JavaScript so they display with HACS and manual installs without separate image requests.
+- Use `image: builtin:san-francisco`, `builtin:stuttgart`, or `builtin:tahoe` in dashboard YAML.
+- Keep the standalone image files in `artwork/` for reuse and provide a reproducible build script.
+
+## v0.2.1 — HACS image-path attempt (superseded)
+
+- Moved the image files beside the script in `dist/`. The tested HACS installation still did not serve them; use v0.2.2.
 
 ## v0.2.0 — Illustrated places
 

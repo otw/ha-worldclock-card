@@ -27,11 +27,11 @@ The card needs no sensors, API key, build step, CDN, or external service. Its ti
 3. In **Settings → Dashboards → Resources**, add `/hacsfiles/ha-worldclock-card/ha-worldclock-card.js` as a **JavaScript module** if HACS has not added it automatically.
 4. Add the [minimal card YAML](#minimal-example) to a dashboard and reload the browser.
 
-The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/docs/publish/plugin/): its `dist/` JavaScript file matches the repository name, and the illustrations sit beside it.
+The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/docs/publish/plugin/): its `dist/` JavaScript file matches the repository name. The three starter illustrations are embedded in that file, so HACS needs no separate image files.
 
 ### Manual
 
-1. Copy [`ha-worldclock-card.js`](ha-worldclock-card.js) to `/config/www/ha-worldclock-card.js`. To use the bundled artwork, also copy the three `.webp` files in [`dist/`](dist/) to `/config/www/ha-worldclock-card/`.
+1. Copy [`ha-worldclock-card.js`](ha-worldclock-card.js) to `/config/www/ha-worldclock-card.js`. The starter artwork is included in this file.
 2. Add `/local/ha-worldclock-card.js` under **Settings → Dashboards → Resources**, with type **JavaScript module**.
 3. Add the [minimal card YAML](#minimal-example) and reload the browser.
 
@@ -56,23 +56,23 @@ Use [IANA time zone names](https://www.iana.org/time-zones), not fixed UTC offse
 
 The included images are square, comic style illustrations with rounded corners in the card. The default rounded-square shape gives landmarks more room than a circle. Set `image_shape: circle` if you prefer round portraits. All three images are original artwork with no household data.
 
-For a **HACS installation**, use:
+The same YAML works with HACS and manual installation:
 
 ```yaml
 type: custom:ha-worldclock-card
 zones:
   - name: San Francisco
     timezone: America/Los_Angeles
-    image: /hacsfiles/ha-worldclock-card/san-francisco.webp
+    image: builtin:san-francisco
   - name: Stuttgart
     timezone: Europe/Berlin
-    image: /hacsfiles/ha-worldclock-card/stuttgart.webp
+    image: builtin:stuttgart
   - name: Tahoe
     timezone: America/Los_Angeles
-    image: /hacsfiles/ha-worldclock-card/tahoe.webp
+    image: builtin:tahoe
 ```
 
-For a **manual installation**, use `/local/ha-worldclock-card/san-francisco.webp` and the corresponding Stuttgart and Tahoe paths after copying the images as described above.
+The separate [`artwork/`](artwork/) files are available for reuse, but the card does not need them installed separately.
 
 You can replace any `image` with your own `/local/...` path, `/hacsfiles/...` path, or HTTPS URL. A 1:1 image at least 128 × 128 pixels works well. With no image, a small clock uses a globe; the primary clock keeps its text layout. An `entity_id` with an `entity_picture` can also provide a dynamic image.
 
@@ -101,7 +101,7 @@ Each `zones` entry accepts:
 | --- | --- | --- |
 | `name` | Yes | Label shown for that place. |
 | `timezone` | Yes | Valid IANA time zone, such as `Europe/Berlin`. |
-| `image` | No | Image URL or path for any place, including the primary clock. `cities/berlin.jpg` resolves to `/local/cities/berlin.jpg`. |
+| `image` | No | `builtin:san-francisco`, `builtin:stuttgart`, `builtin:tahoe`, or your own image URL/path for any place, including the primary clock. `cities/berlin.jpg` resolves to `/local/cities/berlin.jpg`. |
 | `entity_id` | No | Entity whose `entity_picture` takes precedence over `image` when available. |
 
 The day/night icons use the configured clock-hour range. They do not calculate astronomical sunrise or sunset.
@@ -152,7 +152,7 @@ This version removes the original CDN dependencies and per-second console loggin
 
 ## Development
 
-Run `node --test tests/card.test.cjs` for configuration, daylight saving, date, image path, and update-boundary tests. For a local visual preview, run `python3 -m http.server` at the repository root and open `/demo/`. The demo has no Home Assistant connection and uses only example cities.
+Run `npm test` for configuration, daylight saving, date, image path, and update-boundary tests. After editing [`src/ha-worldclock-card.js`](src/ha-worldclock-card.js) or replacing an image in [`artwork/`](artwork/), run `npm run build` to regenerate the manual and HACS scripts. For a local visual preview, run `python3 -m http.server` at the repository root and open `/demo/`. The demo has no Home Assistant connection and uses only example cities.
 
 ## Releases
 
