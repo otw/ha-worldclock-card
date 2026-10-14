@@ -13,6 +13,7 @@ The screenshot is rendered from the included [demo](demo/index.html) with exampl
 - Optional day/night icons, time zone abbreviations, local images or Home Assistant entity pictures.
 - 12-hour, 24-hour, or locale-selected time; optional seconds.
 - Automatic updates at each minute boundary, or each second when seconds are shown. The timer stops when the card leaves the page.
+- Content-sized height in Home Assistant sections views, including when a title or many places are configured.
 
 The card needs no sensors, API key, build step, CDN, or external service. Its time comes from the viewing device's clock. Optional remote `image` URLs are the only reason it would request content from another site.
 

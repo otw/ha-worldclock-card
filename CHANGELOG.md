@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.1 — Section sizing fix
+
+- Let Home Assistant size the card to its content in sections views, so titled clocks and longer city lists are not clipped.
+- Account for the optional title when estimating masonry card height.
+
 ## v0.1.0 — Initial public release
 
 - Material styled world clock with responsive dark and light themes.

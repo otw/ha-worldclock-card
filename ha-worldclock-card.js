@@ -199,8 +199,8 @@ class HAWorldclockCard extends WorldClockBase {
     this._timer = null;
   }
 
-  getCardSize() { return Math.max(3, 2 + (this._config?.zones.length || 1)); }
-  getGridOptions() { return { columns: 12, min_columns: 6, rows: Math.min(8, this.getCardSize()), min_rows: 3 }; }
+  getCardSize() { return Math.max(3, 2 + (this._config?.zones.length || 1) + Number(Boolean(this._config?.title))); }
+  getGridOptions() { return { columns: 12, min_columns: 6 }; }
 
   _build() {
     const config = this._config;
@@ -297,5 +297,5 @@ if (typeof customElements !== 'undefined' && !customElements.get(WORLD_CLOCK_TAG
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { normalizeConfig, formatZone, resolveImage, nextTickDelay };
+  module.exports = { normalizeConfig, formatZone, resolveImage, nextTickDelay, HAWorldclockCard };
 }

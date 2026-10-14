@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { normalizeConfig, formatZone, resolveImage, nextTickDelay } = require('../ha-worldclock-card.js');
+const { normalizeConfig, formatZone, resolveImage, nextTickDelay, HAWorldclockCard } = require('../ha-worldclock-card.js');
 
 test('rejects an invalid IANA time zone before rendering', () => {
   assert.throws(
@@ -44,4 +44,12 @@ test('schedules the next update on the next minute or second boundary', () => {
   const now = new Date('2026-10-14T12:34:45.250Z');
   assert.equal(nextTickDelay(now, false), 14750);
   assert.equal(nextTickDelay(now, true), 750);
+});
+
+test('lets Home Assistant sections size the card to its content', () => {
+  const options = HAWorldclockCard.prototype.getGridOptions();
+  assert.equal(options.columns, 12);
+  assert.equal(Object.hasOwn(options, 'rows'), false);
+  assert.equal(Object.hasOwn(options, 'min_rows'), false);
+  assert.equal(HAWorldclockCard.prototype.getCardSize.call({ _config: { title: 'World clock', zones: [{}, {}] } }), 5);
 });
