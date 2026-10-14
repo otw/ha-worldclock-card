@@ -1,6 +1,6 @@
 {
   "name": "ha-worldclock-card",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "description": "Material styled Home Assistant world clock card",
   "scripts": {

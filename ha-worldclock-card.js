@@ -28,6 +28,9 @@ const WORLD_CLOCK_STYLE = `
     background: color-mix(in srgb, var(--primary-color, #9dc7ff) 15%, transparent); }
   .header-icon ha-icon { --mdc-icon-size: 22px; }
   h2 { margin: 0; font-size: 17px; line-height: 1.2; font-weight: 650; }
+  .primary { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .primary-content { min-width: 0; }
+  ha-card[data-image-shape="circle"] .avatar { border-radius: 50%; }
   .primary-label { display: flex; align-items: center; gap: 8px;
     color: var(--secondary-text-color, #aaa7ad); font-size: 12px; font-weight: 650;
     letter-spacing: .04em; }
@@ -47,6 +50,7 @@ const WORLD_CLOCK_STYLE = `
     background: color-mix(in srgb, var(--primary-color, #9dc7ff) 13%, transparent); }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .avatar ha-icon { --mdc-icon-size: 20px; }
+  .primary-avatar { width: 64px; height: 64px; border-radius: 18px; }
   .zone-text { min-width: 0; flex: 1; }
   .zone-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     font-size: 13px; font-weight: 650; }
@@ -69,6 +73,7 @@ const WORLD_CLOCK_STYLE = `
     .zone { padding: 8px; gap: 8px; }
     .zone-clock { font-size: 14px; }
     .avatar { width: 34px; height: 34px; }
+    .primary-avatar { width: 52px; height: 52px; }
   }
 `;
 
@@ -93,6 +98,8 @@ function normalizeConfig(input) {
   if (!['long', 'short', 'none'].includes(dateFormat)) throw new Error('date_format must be long, short, or none');
   const layout = input.layout ?? 'auto';
   if (!['auto', 'list', 'grid'].includes(layout)) throw new Error('layout must be auto, list, or grid');
+  const imageShape = input.image_shape ?? 'rounded-square';
+  if (!['rounded-square', 'circle'].includes(imageShape)) throw new Error('image_shape must be rounded-square or circle');
   const start = input.day_start_hour ?? 6;
   const end = input.day_end_hour ?? 18;
   if (![start, end].every((value) => Number.isInteger(value) && value >= 0 && value <= 23) || start === end) {
@@ -105,7 +112,7 @@ function normalizeConfig(input) {
   }
   return {
     title: typeof input.title === 'string' ? input.title.trim() : '',
-    zones, locale, hour_format: hourFormat, date_format: dateFormat, layout,
+    zones, locale, hour_format: hourFormat, date_format: dateFormat, layout, image_shape: imageShape,
     show_seconds: input.show_seconds === true,
     show_time_zone: input.show_time_zone === true,
     show_day_night: input.show_day_night !== false,
@@ -157,9 +164,10 @@ class HAWorldclockCard extends WorldClockBase {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `<style>${WORLD_CLOCK_STYLE}</style><ha-card>
       <div class="header" hidden><span class="header-icon"><ha-icon icon="mdi:clock-outline"></ha-icon></span><h2></h2></div>
-      <div class="primary-label"><span id="primary-name"></span><span class="zone-abbr" id="primary-zone"></span></div>
-      <div class="primary-time"><span id="primary-time"></span><ha-icon class="day-icon" id="primary-icon"></ha-icon></div>
-      <div class="primary-date" id="primary-date"></div>
+      <div class="primary"><span class="avatar primary-avatar" id="primary-avatar" hidden><img alt="" hidden><ha-icon icon="mdi:earth"></ha-icon></span>
+        <div class="primary-content"><div class="primary-label"><span id="primary-name"></span><span class="zone-abbr" id="primary-zone"></span></div>
+          <div class="primary-time"><span id="primary-time"></span><ha-icon class="day-icon" id="primary-icon"></ha-icon></div>
+          <div class="primary-date" id="primary-date"></div></div></div>
       <div class="zones auto" id="zones"></div>
     </ha-card>`;
     this._rows = [];
@@ -204,6 +212,7 @@ class HAWorldclockCard extends WorldClockBase {
 
   _build() {
     const config = this._config;
+    this.shadowRoot.querySelector('ha-card').dataset.imageShape = config.image_shape;
     const header = this.shadowRoot.querySelector('.header');
     header.hidden = !config.title;
     header.querySelector('h2').textContent = config.title;
@@ -227,22 +236,32 @@ class HAWorldclockCard extends WorldClockBase {
 
   _updateImages() {
     if (!this._config) return;
+    const primaryZone = this._config.zones[0];
+    const primaryPicture = primaryZone.entity_id && this._hass?.states?.[primaryZone.entity_id]?.attributes?.entity_picture;
+    const primarySrc = this._config.show_images ? resolveImage(primaryPicture || primaryZone.image) : null;
+    const primaryAvatar = this.shadowRoot.getElementById('primary-avatar');
+    primaryAvatar.hidden = !primarySrc;
+    this._setAvatar(primaryAvatar, primarySrc);
     this._rows.forEach((row, index) => {
       const zone = this._config.zones[index + 1];
       const entityPicture = zone.entity_id && this._hass?.states?.[zone.entity_id]?.attributes?.entity_picture;
       const src = this._config.show_images ? resolveImage(entityPicture || zone.image) : null;
-      const image = row.querySelector('img');
-      const icon = row.querySelector('.avatar ha-icon');
-      if (src) {
-        if (image.getAttribute('src') !== src) image.setAttribute('src', src);
-        image.hidden = false;
-        icon.hidden = true;
-      } else {
-        image.removeAttribute('src');
-        image.hidden = true;
-        icon.hidden = false;
-      }
+      this._setAvatar(row.querySelector('.avatar'), src);
     });
+  }
+
+  _setAvatar(avatar, src) {
+    const image = avatar.querySelector('img');
+    const icon = avatar.querySelector('ha-icon');
+    if (src) {
+      if (image.getAttribute('src') !== src) image.setAttribute('src', src);
+      image.hidden = false;
+      icon.hidden = true;
+    } else {
+      image.removeAttribute('src');
+      image.hidden = true;
+      icon.hidden = false;
+    }
   }
 
   _tick() {

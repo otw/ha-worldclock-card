@@ -2,7 +2,7 @@
 
 A compact, Material styled world clock for Home Assistant dashboards. Put a primary clock and up to eleven other places in one card. It follows your Home Assistant theme, adjusts to narrow screens, and handles daylight saving changes through the browser's IANA time zone data.
 
-![World Clock Card in dark and light themes with example cities](docs/world-clock-card.jpg)
+![World Clock Card in dark and light themes with illustrated cities](docs/world-clock-card.jpg)
 
 The screenshot is rendered from the included [demo](demo/index.html) with example cities. It contains no household data or private images.
 
@@ -10,7 +10,8 @@ The screenshot is rendered from the included [demo](demo/index.html) with exampl
 
 - A large primary clock with the local date; the first `zones` entry is the primary clock.
 - Smaller clocks with each place's own date, so “tomorrow” across the date line is visible.
-- Optional day/night icons, time zone abbreviations, local images or Home Assistant entity pictures.
+- Optional day/night icons, time zone abbreviations, local images or Home Assistant entity pictures for every clock.
+- Original comic style images for San Francisco, Stuttgart, and Lake Tahoe, bundled for HACS or manual installation.
 - 12-hour, 24-hour, or locale-selected time; optional seconds.
 - Automatic updates at each minute boundary, or each second when seconds are shown. The timer stops when the card leaves the page.
 - Content-sized height in Home Assistant sections views, including when a title or many places are configured.
@@ -30,7 +31,7 @@ The repository follows [HACS dashboard plugin structure](https://www.hacs.xyz/do
 
 ### Manual
 
-1. Copy [`ha-worldclock-card.js`](ha-worldclock-card.js) to `/config/www/ha-worldclock-card.js`.
+1. Copy [`ha-worldclock-card.js`](ha-worldclock-card.js) to `/config/www/ha-worldclock-card.js`. To use the bundled artwork, also copy [`dist/images/`](dist/images/) to `/config/www/ha-worldclock-card/images/`.
 2. Add `/local/ha-worldclock-card.js` under **Settings → Dashboards → Resources**, with type **JavaScript module**.
 3. Add the [minimal card YAML](#minimal-example) and reload the browser.
 
@@ -51,6 +52,30 @@ zones:
 
 Use [IANA time zone names](https://www.iana.org/time-zones), not fixed UTC offsets. That lets the browser account for daylight saving changes.
 
+## Illustrated places
+
+The included images are square, comic style illustrations with rounded corners in the card. The default rounded-square shape gives landmarks more room than a circle. Set `image_shape: circle` if you prefer round portraits. All three images are original artwork with no household data.
+
+For a **HACS installation**, use:
+
+```yaml
+type: custom:ha-worldclock-card
+zones:
+  - name: San Francisco
+    timezone: America/Los_Angeles
+    image: /hacsfiles/ha-worldclock-card/images/san-francisco.webp
+  - name: Stuttgart
+    timezone: Europe/Berlin
+    image: /hacsfiles/ha-worldclock-card/images/stuttgart.webp
+  - name: Tahoe
+    timezone: America/Los_Angeles
+    image: /hacsfiles/ha-worldclock-card/images/tahoe.webp
+```
+
+For a **manual installation**, use `/local/ha-worldclock-card/images/san-francisco.webp` and the corresponding Stuttgart and Tahoe paths after copying the image folder as described above.
+
+You can replace any `image` with your own `/local/...` path, `/hacsfiles/...` path, or HTTPS URL. A 1:1 image at least 128 × 128 pixels works well. With no image, a small clock uses a globe; the primary clock keeps its text layout. An `entity_id` with an `entity_picture` can also provide a dynamic image.
+
 ## Configuration
 
 | Option | Default | Description |
@@ -67,6 +92,7 @@ Use [IANA time zone names](https://www.iana.org/time-zones), not fixed UTC offse
 | `day_start_hour` | `6` | First daytime hour, from `0` to `23`. |
 | `day_end_hour` | `18` | First nighttime hour, from `0` to `23`. |
 | `show_images` | `true` | Show configured images; otherwise use a globe icon. |
+| `image_shape` | `rounded-square` | `rounded-square` or `circle` for all place images. |
 | `layout` | `auto` | `auto` uses two columns when wide enough; `list` and `grid` override it. |
 
 Each `zones` entry accepts:
@@ -75,7 +101,7 @@ Each `zones` entry accepts:
 | --- | --- | --- |
 | `name` | Yes | Label shown for that place. |
 | `timezone` | Yes | Valid IANA time zone, such as `Europe/Berlin`. |
-| `image` | No | Image URL or path. `cities/berlin.jpg` resolves to `/local/cities/berlin.jpg`. |
+| `image` | No | Image URL or path for any place, including the primary clock. `cities/berlin.jpg` resolves to `/local/cities/berlin.jpg`. |
 | `entity_id` | No | Entity whose `entity_picture` takes precedence over `image` when available. |
 
 The day/night icons use the configured clock-hour range. They do not calculate astronomical sunrise or sunset.
@@ -106,7 +132,7 @@ zones:
     timezone: Asia/Tokyo
 ```
 
-Place local images under `/config/www/`; the example image above would be `/config/www/cities/new-york.jpg`. Without an image, the card uses a globe icon. Images are optional for every zone, including the primary one (whose image is not displayed).
+Place local images under `/config/www/`; the example image above would be `/config/www/cities/new-york.jpg`. Images are optional for every zone.
 
 ## Upgrade from an older `ha-worldclock-card`
 

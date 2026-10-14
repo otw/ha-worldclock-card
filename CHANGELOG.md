@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.0 — Illustrated places
+
+- Add original, reusable comic style artwork for San Francisco, Stuttgart, and Lake Tahoe.
+- Display an optional image for the primary clock as well as secondary clocks.
+- Use rounded-square artwork by default, with `image_shape: circle` for custom portraits.
+- Package the images with the JavaScript in `dist/` so HACS installs the complete card.
+
 ## v0.1.1 — Section sizing fix
 
 - Let Home Assistant size the card to its content in sections views, so titled clocks and longer city lists are not clipped.
